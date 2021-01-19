@@ -9,6 +9,13 @@ from dash.dependencies import Input, Output
 
 app = dash.Dash(__name__)
 
+'''
+========================== DASH APP EXAMPLE=========================
+    The three pillars of a dash app are the The Dash Layout (html components),
+    The Plotty Graph (graphical Outpu), and The Callback function (bussines
+    logic that deals with the data)
+'''
+
 # ------------------------------------------------------------------------------
 # Import and clean data (importing csv into pandas)
 df = pd.read_csv("intro_bees.csv")
@@ -45,8 +52,10 @@ app.layout = html.Div([
 # ------------------------------------------------------------------------------
 # Connect the Plotly graphs with Dash Components
 @app.callback(
+    # Arrays of outputs
     [Output(component_id='output_container', component_property='children'),
      Output(component_id='my_bee_map', component_property='figure')],
+    # Inputs
     [Input(component_id='slct_year', component_property='value')]
 )
 def update_graph(option_slctd): 
@@ -58,12 +67,15 @@ def update_graph(option_slctd):
 
     container = "The year chosen by user was: {}".format(option_slctd)
 
+    # Filtering the data of interest from the dataset:
     dff = df.copy()
     dff = dff[dff["Year"] == option_slctd]
     dff = dff[dff["Affected by"] == "Varroa_mites"]
 
-    # Plotly Express
+# -------------------------------------------------------------------
+    # Plotly Express is the most recent tool
     fig = px.choropleth(
+        # Loading the filtered dataset and parameters for the graph
         data_frame=dff,
         locationmode='USA-states',
         locations='state_code',
@@ -75,7 +87,7 @@ def update_graph(option_slctd):
         template='plotly_dark'
     )
 
-    # Plotly Graph Objects (GO)
+    # Plotly Graph Objects (GO) (older tool)
     # fig = go.Figure(
     #     data=[go.Choropleth(
     #         locationmode='USA-states',
